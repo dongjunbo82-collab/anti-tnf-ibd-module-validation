@@ -5,6 +5,7 @@ from pathlib import Path
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,8 +83,24 @@ def main() -> None:
         loc="left",
         fontweight="bold",
     )
-    ax.text(-0.98, 0.2, "Lower in responders", ha="left", va="bottom", fontsize=7, color="0.25")
-    ax.text(0.98, 0.2, "Higher in responders", ha="right", va="bottom", fontsize=7, color="0.25")
+    ax.text(
+        -0.98,
+        0.2,
+        "Lower in responders",
+        ha="left",
+        va="bottom",
+        fontsize=7,
+        color="0.25",
+    )
+    ax.text(
+        0.98,
+        0.2,
+        "Higher in responders",
+        ha="right",
+        va="bottom",
+        fontsize=7,
+        color="0.25",
+    )
     for _, r in df.iterrows():
         ax.text(
             1.05,

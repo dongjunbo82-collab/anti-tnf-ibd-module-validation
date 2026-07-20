@@ -31,7 +31,7 @@ Observed package versions:
 
 Install package requirements from `requirements_reproducibility.txt`. A local virtual environment such as `.venv` can be used, but it is not included in the release.
 
-The scientific analysis and figure scripts were smoke-tested from a temporary copy of `public_repository_ready_v2` on 2026-07-19 using the local project virtual environment. The test reran `scripts/summarize_bulk_validation.py`, `scripts/plot_bulk_validation_forest.py` and `scripts/plot_workflow_schematic.py`.
+The scientific analysis and figure scripts were smoke-tested from a temporary copy of `public_repository_ready_v2` on 2026-07-19 using the local project virtual environment. The test reran `scripts/summarize_bulk_validation.py`, `scripts/plot_bulk_validation_forest.py` and `scripts/plot_workflow_schematic.py`. Document-generation utilities may require additional packages such as `python-docx`; they are not required for reproducing the scientific analysis tables and figures.
 
 ## External data locations
 
@@ -53,13 +53,24 @@ Important limitation: the reproducibility-critical workflow in this package uses
 
 ### 1. TAURUS metadata and archive feasibility
 
+Parse and audit TAURUS metadata:
+
 ```powershell
 python scripts\parse_gse282122_soft.py
 python scripts\audit_umap_sample_coverage.py
 python scripts\audit_gse282122_processed_tar.py
 ```
 
+Key outputs:
+
+- `results/feasibility/GSE282122_sample_metadata.csv`
+- `results/feasibility/GSE282122_umap_sample_coverage.csv`
+- `results/feasibility/GSE282122_processed_tar_audit.json`
+- `results/feasibility/feasibility_gate_report.md`
+
 ### 2. TAURUS whole-biopsy module scoring and recovery gate
+
+Run full 10x scoring and site-aware recovery:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\run_geo_10x_full_gate.ps1
@@ -74,32 +85,49 @@ python scripts\summarize_recovery_gate.py
 python scripts\plot_recovery_synchrony.py
 ```
 
+Key outputs:
+
+- `results/module_scores/geo_10x_full_sample_module_scores.csv`
+- `results/recovery/geo_10x_full_siteaware_patient_lineage_module_recovery.csv`
+- `results/recovery/geo_10x_full_siteaware_recovery_synchrony_tests.csv`
+- `results/recovery/geo_10x_full_siteaware_gate_decision.json`
+- `results/figures/fig1_geo_10x_full_siteaware_recovery_synchrony.*`
+
 Interpretation: whole-biopsy recovery was computable but weak and not suitable as the primary positive result.
 
 ### 3. Bulk GEO validation
 
+Download/process GEO series matrices as needed:
+
 ```powershell
 python scripts\download_geo_series_matrix.py
+```
+
+Score and analyse bulk cohorts:
+
+```powershell
 python scripts\score_bulk_series_matrix_modules.py
 python scripts\analyze_gse16879_bulk_modules.py
 python scripts\analyze_gse23597_bulk_modules.py
 python scripts\summarize_bulk_validation.py
 python scripts\enhance_bulk_validation_stats.py
-python scripts\audit_bulk_module_score_sensitivity.py
 ```
 
 Key outputs:
 
+- `results/bulk_validation/GSE16879_bulk_module_scores_clean.csv`
 - `results/bulk_validation/GSE16879_bulk_module_tests.csv`
+- `results/bulk_validation/GSE23597_bulk_module_scores_clean.csv`
 - `results/bulk_validation/GSE23597_bulk_module_tests.csv`
 - `results/bulk_validation/GSE14580_bulk_module_tests.csv`
 - `results/bulk_validation/bulk_validation_enhanced_stats.csv`
 - `results/bulk_validation/bulk_validation_enhanced_module_summary.csv`
-- `results/bulk_validation/bulk_module_score_sensitivity_summary.json`
 
 Interpretation: GSE16879 and GSE23597 support the pretreatment module-response association. GSE14580 overlaps with GSE16879 UC results and should not be counted as an independent validation cohort.
 
 ### 4. Figure generation
+
+Generate manuscript figures:
 
 ```powershell
 python scripts\plot_workflow_schematic.py
@@ -110,11 +138,27 @@ python scripts\plot_recovery_synchrony.py
 python scripts\plot_feasibility_coverage.py
 ```
 
+Key outputs:
+
+- `results/figures/fig1_public_data_workflow_schematic.*`
+- `results/figures/fig_bulk_GSE16879_pretreatment_modules.*`
+- `results/figures/fig_bulk_GSE23597_baseline_modules.*`
+- `results/figures/fig_bulk_validation_forest.*`
+- `results/figures/fig1_geo_10x_full_siteaware_recovery_synchrony.*`
+- `results/figures/figS1_feasibility_coverage.*`
+
+### 5. Supplementary workbook supplied with the public package
+
+The cleaned public package includes the final supplementary workbook as a derived output:
+
+- `deliverables/supplementary_tables_v1.xlsx`
+
+Submission-oriented Word document generation and ZIP finalization scripts are intentionally not included in the public repository package. They are administrative packaging tools rather than scientific-analysis dependencies.
+
 ## Primary result files for manuscript claims
 
 - Main cross-cohort statistics: `results/bulk_validation/bulk_validation_enhanced_stats.csv`
 - Module summary: `results/bulk_validation/bulk_validation_enhanced_module_summary.csv`
-- Sensitivity summary: `results/bulk_validation/bulk_module_score_sensitivity_summary.json`
 - TAURUS feasibility-gate decision: `results/recovery/geo_10x_full_siteaware_gate_decision.json`
 - Supplementary table workbook supplied as a derived output: `deliverables/supplementary_tables_v1.xlsx`
 
@@ -136,6 +180,16 @@ Not supported without further data:
 
 ## Suggested public repository contents
 
-If the authors decide to create a public repository, include `scripts/`, `docs/`, selected `results/`, final figure exports and `deliverables/supplementary_tables_v1.xlsx`.
+If the authors decide to create a public repository, include:
+
+- `scripts/`
+- `docs/reproducibility_readme.md`
+- `docs/source_references.md`
+- `docs/formatted_references_checked.md`
+- `results/bulk_validation/bulk_validation_enhanced_stats.csv`
+- `results/bulk_validation/bulk_validation_enhanced_module_summary.csv`
+- `results/recovery/geo_10x_full_siteaware_gate_decision.json`
+- `results/figures/` final SVG/PNG exports
+- `deliverables/supplementary_tables_v1.xlsx`
 
 Do not upload very large raw archives unless the repository is designed for large data. Instead, cite GEO/Zenodo accessions and document the expected external data path with a placeholder such as `<LOCAL_DATA_DIR>`.
