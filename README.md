@@ -1,31 +1,21 @@
-# Code release README
+# Interpretable anti-TNF IBD mucosal module analysis
 
-Working title: Interpretable public-data validation of pretreatment mucosal modules associated with anti-TNF outcomes in inflammatory bowel disease
+This repository contains cleaned code, selected derived result tables, and figure exports for a public-database transcriptomic analysis of pretreatment mucosal modules associated with anti-TNF outcomes in inflammatory bowel disease.
 
-This code release is intended to accompany a public-database manuscript submitted to BMC Gastroenterology or a related journal. It is a cleaned scientific reproducibility package, not the journal-administration package.
+It is a scientific reproducibility repository, not the journal-administration package. Manuscript Word files, cover letters, submission forms, response letters, and local packaging/audit administration files are intentionally excluded.
 
 ## Contents
 
-This release includes:
+This repository includes:
 
 - analysis scripts under `scripts/`
 - reproducibility documentation under `docs/`
-- selected derived result tables under `results/`
-- selected final figures under `results/figures/`
-- supplementary table workbook under `deliverables/`
+- selected derived CSV/JSON result tables under `results/`
+- selected final PNG/SVG figure exports under `results/figures/`
 - Python package requirements in `requirements_reproducibility.txt`
+- citation/license/deposition metadata templates
 
-This release does not include the large TAURUS GEO processed archive. That file should be downloaded from the public GEO accession:
-
-- GSE282122: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE282122
-
-When rerunning the TAURUS 10x scoring step, place the downloaded archive in a local data directory of your choice and pass that path to the relevant script or PowerShell wrapper. Example placeholder:
-
-```text
-<LOCAL_DATA_DIR>/GSE282122_filtered_processed_data.tar.gz
-```
-
-Do not upload large raw archives to the code repository unless the chosen repository is intended for large data. Cite the public GEO/Zenodo source instead.
+The supplementary Excel workbook is handled as a journal supplementary file rather than stored in this GitHub repository, because the repository is kept focused on code, machine-readable derived tables, and figures.
 
 ## Public datasets
 
@@ -34,6 +24,12 @@ Do not upload large raw archives to the code repository unless the chosen reposi
 - GSE23597: colonic biopsy expression data from infliximab-treated ulcerative colitis patients.
 - GSE14580: ulcerative colitis infliximab response dataset retained as an overlap audit.
 
+The large TAURUS GEO processed archive is not included. It should be downloaded from public GEO accession GSE282122:
+
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE282122
+
+When rerunning the TAURUS 10x scoring step, place the downloaded archive in a local data directory of your choice and pass that path to the relevant script or PowerShell wrapper.
+
 ## Quick reproduction guide
 
 See:
@@ -41,16 +37,11 @@ See:
 - `docs/reproducibility_readme.md`
 - `docs/result_file_inventory.md`
 
-The core statistical result table is:
+Core manuscript-supporting outputs include:
 
 - `results/bulk_validation/bulk_validation_enhanced_stats.csv`
-
-The module-level summary is:
-
 - `results/bulk_validation/bulk_validation_enhanced_module_summary.csv`
-
-The single-cell feasibility-gate decision is:
-
+- `results/bulk_validation/bulk_module_score_sensitivity_summary.json`
 - `results/recovery/geo_10x_full_siteaware_gate_decision.json`
 
 ## Environment
@@ -61,18 +52,6 @@ The workflow was run using Python 3.12.13. Install packages from:
 pip install -r requirements_reproducibility.txt
 ```
 
-The scientific analysis and figure scripts were smoke-tested in a local project virtual environment. Submission-oriented DOCX generation, final ZIP packaging and journal-administration scripts are intentionally excluded from this cleaned public package because they are not required for reproducing the scientific claims. A lightweight URL verifier (`scripts/verify_public_repository_url.py`) is retained so authors or reviewers can check the public repository/archive link recorded in manuscript materials.
-
-## Public-package smoke test
-
-A temporary-copy smoke test on 2026-07-19 successfully reran:
-
-- `scripts/summarize_bulk_validation.py`
-- `scripts/plot_bulk_validation_forest.py`
-- `scripts/plot_workflow_schematic.py`
-
-See `docs/public_repository_smoke_test_2026-07-19.md` for the record.
-
 ## Scientific boundary
 
 The current release supports a public transcriptomic module-validation study. It does not support claims of:
@@ -82,26 +61,6 @@ The current release supports a public transcriptomic module-validation study. It
 - cell-type-specific localization from the current GEO matrices alone;
 - cross-lineage single-cell synchrony without annotated TAURUS H5AD files.
 
-## Suggested citation
-
-If using this code before publication, cite the associated manuscript title and public GEO/Zenodo datasets.
-
-Before public deposition, fill:
-
-- `CITATION.cff.template`
-
-After the repository/archive URL is available, update manuscript/submission files in the separate local submission workspace. The public package itself does not include journal-finalization scripts; it only retains the standalone URL-verification helper.
-
 ## License
 
-License to be selected by the author team before public release. Common choices:
-
-- MIT License for code.
-- CC BY 4.0 for documentation and non-code materials.
-
-Before public deposition, complete:
-
-- `LICENSE_DECISION_TEMPLATE.md`
-- `docs/code_release_public_deposition_checklist.md`
-
-Do not publish this repository publicly until all authors approve code/data sharing and the selected license.
+Code is prepared for MIT licensing. Documentation and non-code research materials are prepared for CC BY 4.0-style reuse unless otherwise specified by the author team or journal policy.
